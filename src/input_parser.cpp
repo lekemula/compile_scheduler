@@ -6,10 +6,11 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <memory>
 
 InputParser::InputParser(string inputSourcePath) : _inputSourcePath(inputSourcePath) {};
 
-vector<SourceFile*> InputParser::parse() {
+vector<shared_ptr<SourceFile>> InputParser::parse() {
     vector<SourceFile> sourceFiles = {};
     _open();
 
@@ -46,20 +47,19 @@ void InputParser::_parseSourceFiles() {
         string id;
         int compilationTime;
         int replicationTime;
-        SourceFile* sourceFile;
 
         string fileInfos;
         getline(_file, fileInfos);
         stringstream fileInfosStream(fileInfos);
         fileInfosStream >> id >> compilationTime >> replicationTime;
 
-        sourceFile = new SourceFile(id, compilationTime, replicationTime);
+        shared_ptr<SourceFile> sourceFile(new SourceFile(id, compilationTime, replicationTime));
         _addParsedSourceFile(sourceFile);
         _parseFileDependencies(sourceFile);
     }
 }
 
-void InputParser::_parseFileDependencies(SourceFile *sourceFile) {
+void InputParser::_parseFileDependencies(shared_ptr<SourceFile> &sourceFile) {
     string fileDependencies;
     getline(_file, fileDependencies);
     stringstream fileDependenciesStream(fileDependencies);
@@ -69,7 +69,7 @@ void InputParser::_parseFileDependencies(SourceFile *sourceFile) {
     for (int i = 0; i < dependenciesCount; ++i) {
         string dependencyId;
         fileDependenciesStream >> dependencyId;
-        sourceFile->addDependency(_findSourceFile(dependencyId));
+        sourceFile->addDependency(_findSourceFile(dependencyId).get());
     }
 }
 
@@ -86,11 +86,11 @@ void InputParser::_parseFileTargets() {
     }
 }
 
-void InputParser::_addParsedSourceFile(SourceFile *sourceFile) {
+void InputParser::_addParsedSourceFile(shared_ptr<SourceFile> &sourceFile) {
     _parsedSourceFilesMap[sourceFile->getId()] = sourceFile;
     _parsedSourceFiles.push_back(sourceFile);
 }
 
-SourceFile *InputParser::_findSourceFile(string id) {
+shared_ptr<SourceFile> InputParser::_findSourceFile(string id) {
     return _parsedSourceFilesMap[id];
 }

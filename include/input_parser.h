@@ -8,6 +8,7 @@
 #include <fstream>
 #include <map>
 #include "source_file.h"
+#include <memory>
 
 using namespace std;
 
@@ -22,22 +23,21 @@ private:
     string _inputSourcePath;
     ifstream _file;
     InputMetadata _metadata;
-    vector<SourceFile*> _parsedSourceFiles;
-    map<string, SourceFile*> _parsedSourceFilesMap;
+    vector<shared_ptr<SourceFile>> _parsedSourceFiles;
+    map<string, shared_ptr<SourceFile>> _parsedSourceFilesMap;
 
     void _open();
     void _close();
     void _parseInputMetadata();
     void _parseSourceFiles();
-    void _parseFileDependencies(SourceFile *sourceFile);
+    void _parseFileDependencies(shared_ptr<SourceFile> &sourceFile);
     void _parseFileTargets();
-    void _addParsedSourceFile(SourceFile* sourceFile);
-    SourceFile* _findSourceFile(string id);
+    void _addParsedSourceFile(shared_ptr<SourceFile> &sourceFile);
+    shared_ptr<SourceFile> _findSourceFile(string id);
 
 public:
     InputParser(string inputSourcePath);
-    ~InputParser();
-    vector<SourceFile*> parse();
+    vector<shared_ptr<SourceFile>> parse();
 };
 
 
