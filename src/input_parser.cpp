@@ -3,14 +3,11 @@
 //
 
 #include "input_parser.h"
-#include <fstream>
-#include <string>
 #include <sstream>
 
 InputParser::InputParser(string inputSourcePath) : _inputSourcePath(inputSourcePath) {};
 
-vector<SourceFile*> InputParser::parse() {
-    vector<SourceFile> sourceFiles = {};
+vector<shared_ptr<SourceFile>> InputParser::parse() {
     _open();
 
     if (_file.is_open()){
@@ -46,20 +43,19 @@ void InputParser::_parseSourceFiles() {
         string id;
         int compilationTime;
         int replicationTime;
-        SourceFile* sourceFile;
 
         string fileInfos;
         getline(_file, fileInfos);
         stringstream fileInfosStream(fileInfos);
         fileInfosStream >> id >> compilationTime >> replicationTime;
 
-        sourceFile = new SourceFile(id, compilationTime, replicationTime);
+        shared_ptr<SourceFile> sourceFile(new SourceFile(id, compilationTime, replicationTime));
         _addParsedSourceFile(sourceFile);
         _parseFileDependencies(sourceFile);
     }
 }
 
-void InputParser::_parseFileDependencies(SourceFile *sourceFile) {
+void InputParser::_parseFileDependencies(shared_ptr<SourceFile> &sourceFile) {
     string fileDependencies;
     getline(_file, fileDependencies);
     stringstream fileDependenciesStream(fileDependencies);
@@ -82,15 +78,15 @@ void InputParser::_parseFileTargets() {
         getline(_file, targetInfos);
         stringstream targetInfosStream(targetInfos);
         targetInfosStream >> sourceFileId >> deadline >> goalPoints;
-        _findSourceFile(sourceFileId)->setCompilationTarget(new CompilationTarget {deadline, goalPoints});
+        _findSourceFile(sourceFileId)->setCompilationTarget(unique_ptr<CompilationTarget>(new CompilationTarget {deadline, goalPoints}));
     }
 }
 
-void InputParser::_addParsedSourceFile(SourceFile *sourceFile) {
+void InputParser::_addParsedSourceFile(shared_ptr<SourceFile> &sourceFile) {
     _parsedSourceFilesMap[sourceFile->getId()] = sourceFile;
     _parsedSourceFiles.push_back(sourceFile);
 }
 
-SourceFile *InputParser::_findSourceFile(string id) {
+shared_ptr<SourceFile> InputParser::_findSourceFile(string id) {
     return _parsedSourceFilesMap[id];
 }

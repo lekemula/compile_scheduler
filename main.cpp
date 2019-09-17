@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
 
     InputParser inputParser(inputFilePath);
 
-    for(SourceFile* sourceFile : inputParser.parse()){
+    for(shared_ptr<SourceFile> sourceFile : inputParser.parse()){
         std::cout << *sourceFile << std::endl;
     }
 
