@@ -7,8 +7,11 @@
 
 #include <fstream>
 #include <map>
-#include "source_file.h"
 #include <memory>
+#include <string>
+#include <fstream>
+#include <vector>
+#include "source_file.h"
 
 using namespace std;
 

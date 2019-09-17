@@ -3,15 +3,11 @@
 //
 
 #include "input_parser.h"
-#include <fstream>
-#include <string>
 #include <sstream>
-#include <memory>
 
 InputParser::InputParser(string inputSourcePath) : _inputSourcePath(inputSourcePath) {};
 
 vector<shared_ptr<SourceFile>> InputParser::parse() {
-    vector<SourceFile> sourceFiles = {};
     _open();
 
     if (_file.is_open()){
@@ -69,7 +65,7 @@ void InputParser::_parseFileDependencies(shared_ptr<SourceFile> &sourceFile) {
     for (int i = 0; i < dependenciesCount; ++i) {
         string dependencyId;
         fileDependenciesStream >> dependencyId;
-        sourceFile->addDependency(_findSourceFile(dependencyId).get());
+        sourceFile->addDependency(_findSourceFile(dependencyId));
     }
 }
 
@@ -82,7 +78,7 @@ void InputParser::_parseFileTargets() {
         getline(_file, targetInfos);
         stringstream targetInfosStream(targetInfos);
         targetInfosStream >> sourceFileId >> deadline >> goalPoints;
-        _findSourceFile(sourceFileId)->setCompilationTarget(new CompilationTarget {deadline, goalPoints});
+        _findSourceFile(sourceFileId)->setCompilationTarget(unique_ptr<CompilationTarget>(new CompilationTarget {deadline, goalPoints}));
     }
 }
 
