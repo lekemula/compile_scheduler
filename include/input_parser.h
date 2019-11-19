@@ -40,7 +40,7 @@ private:
 
 public:
     InputParser(string inputSourcePath);
-    vector<shared_ptr<SourceFile>> parse();
+    vector<shared_ptr<SourceFile>> parse(InputMetadata& inputMetadata);
 };
 
 

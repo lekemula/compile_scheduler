@@ -7,7 +7,7 @@
 
 InputParser::InputParser(string inputSourcePath) : _inputSourcePath(inputSourcePath) {};
 
-vector<shared_ptr<SourceFile>> InputParser::parse() {
+vector<shared_ptr<SourceFile>> InputParser::parse(InputMetadata& outInputMetadata) {
     _open();
 
     if (_file.is_open()){
@@ -18,6 +18,7 @@ vector<shared_ptr<SourceFile>> InputParser::parse() {
 
     _close();
 
+    outInputMetadata = _metadata;
     return _parsedSourceFiles;
 }
 
