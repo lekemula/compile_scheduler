@@ -4,4 +4,16 @@ project(compile_scheduler)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
-add_executable(compile_scheduler main.cpp src/source_file.cpp include/source_file.h include/compilation_target.h src/input_parser.cpp include/input_parser.h include/server.h)
+add_executable(
+        compile_scheduler
+        main.cpp
+        src/source_file.cpp
+        include/source_file.h
+        include/compilation_target.h
+        src/input_parser.cpp
+        include/input_parser.h
+        include/server.h
+        src/compilation_step.cpp
+        include/compilation_step.h
+        src/server.cpp
+)

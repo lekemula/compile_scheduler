@@ -2,6 +2,7 @@
 // Created by leke on 9/7/19.
 //
 
+#include <vector>
 #include "source_file.h"
 
 SourceFile::SourceFile(string id, int compilationTime, int replicationTime) :
@@ -26,8 +27,8 @@ string SourceFile::toString() const {
 
     if (_dependencies.size() > 0) {
         string fileIds = "";
-        for (auto& dependencyPair : _dependencies) {
-            shared_ptr<SourceFile> dependency = dependencyPair.second;
+        for (auto & dependencyPair : _dependencies) {
+            SourceFilePtr dependency = dependencyPair.second;
             fileIds += " " + dependency->getId();
         }
 
@@ -58,9 +59,21 @@ const SourceFile &SourceFile::setCompilationTarget(unique_ptr<CompilationTarget>
     return *this;
 }
 
-const SourceFile &SourceFile::addDependency(shared_ptr<SourceFile> sourceFile) {
+const SourceFile &SourceFile::addDependency(SourceFilePtr sourceFile) {
     _dependencies[sourceFile->getId()] = sourceFile;
     return *this;
+}
+
+vector<SourceFilePtr> SourceFile::getDependencies() {
+    vector<SourceFilePtr> returnValue;
+
+    map<string, SourceFilePtr>::iterator it;
+
+    for (it = _dependencies.begin(); it != _dependencies.end(); ++it) {
+        returnValue.push_back(it->second);
+    }
+
+    return returnValue;
 }
 
 std::ostream &operator<<(std::ostream &os, SourceFile const &f) {

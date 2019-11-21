@@ -10,15 +10,14 @@
 #include "source_file.h"
 
 class Server{
-//    static vector CompilationSteps
-    bool canCompile(SourceFile& sourceFile);
 private:
-    vector<shared_ptr<SourceFile>> _compiledFiles;
+    vector<SourceFilePtr> _compiledFiles;
 
-};
-
-struct CompilationStep{
-    Server server;
-    SourceFile sourceFile;
+public:
+    Server();
+    Server(vector<SourceFilePtr> compiledFiles);
+    bool hasCompiled(SourceFilePtr const & sourceFile);
+    bool canCompile(SourceFilePtr & sourceFile);
+    void compile(SourceFilePtr const & sourceFile);
 };
 #endif //COMPILE_SCHEDULER_SERVER_H

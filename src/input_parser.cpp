@@ -7,7 +7,7 @@
 
 InputParser::InputParser(string inputSourcePath) : _inputSourcePath(inputSourcePath) {};
 
-vector<shared_ptr<SourceFile>> InputParser::parse(InputMetadata& outInputMetadata) {
+vector<SourceFilePtr> InputParser::parse(InputMetadata& outInputMetadata) {
     _open();
 
     if (_file.is_open()){
@@ -50,13 +50,13 @@ void InputParser::_parseSourceFiles() {
         stringstream fileInfosStream(fileInfos);
         fileInfosStream >> id >> compilationTime >> replicationTime;
 
-        shared_ptr<SourceFile> sourceFile(new SourceFile(id, compilationTime, replicationTime));
+        SourceFilePtr sourceFile(new SourceFile(id, compilationTime, replicationTime));
         _addParsedSourceFile(sourceFile);
         _parseFileDependencies(sourceFile);
     }
 }
 
-void InputParser::_parseFileDependencies(shared_ptr<SourceFile> &sourceFile) {
+void InputParser::_parseFileDependencies(SourceFilePtr &sourceFile) {
     string fileDependencies;
     getline(_file, fileDependencies);
     stringstream fileDependenciesStream(fileDependencies);
@@ -83,11 +83,11 @@ void InputParser::_parseFileTargets() {
     }
 }
 
-void InputParser::_addParsedSourceFile(shared_ptr<SourceFile> &sourceFile) {
+void InputParser::_addParsedSourceFile(SourceFilePtr &sourceFile) {
     _parsedSourceFilesMap[sourceFile->getId()] = sourceFile;
     _parsedSourceFiles.push_back(sourceFile);
 }
 
-shared_ptr<SourceFile> InputParser::_findSourceFile(string id) {
+SourceFilePtr InputParser::_findSourceFile(string id) {
     return _parsedSourceFilesMap[id];
 }
