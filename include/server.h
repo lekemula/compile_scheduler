@@ -11,13 +11,18 @@
 
 class Server{
 private:
+    int _id;
     vector<SourceFilePtr> _compiledFiles;
 
 public:
-    Server();
-    Server(vector<SourceFilePtr> compiledFiles);
+    Server(int id);
+    Server(int id, vector<SourceFilePtr> compiledFiles);
     bool hasCompiled(SourceFilePtr const & sourceFile);
     bool canCompile(SourceFilePtr & sourceFile);
     void compile(SourceFilePtr const & sourceFile);
+    int getCompilationTime();
+    int getId();
 };
+
+typedef shared_ptr<Server> ServerPtr;
 #endif //COMPILE_SCHEDULER_SERVER_H

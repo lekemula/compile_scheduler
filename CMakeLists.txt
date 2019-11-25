@@ -16,4 +16,4 @@ add_executable(
         src/compilation_step.cpp
         include/compilation_step.h
         src/server.cpp
-)
+        src/solution.cpp include/solution.h)

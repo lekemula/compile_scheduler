@@ -32,16 +32,18 @@ public:
     const SourceFile&               setCompilationTarget(unique_ptr<CompilationTarget>compilationTarget);
     const SourceFile&               addDependency(SourceFilePtr sourceFile);
     bool                            isTargetFile() { return _compilationTarget != NULL; }
-    vector<SourceFilePtr>  getDependencies();
+    int                             getPoints(int compiledAt);
+    vector<SourceFilePtr>           getDependencies();
 
     string toString() const;
 
     bool operator ==(SourceFile const &otherFile);
     bool operator !=(SourceFile const &otherFile);
+
+    friend std::ostream &operator<<(std::ostream &os, SourceFile const &f);
 };
 
 typedef shared_ptr<SourceFile> SourceFilePtr;
 
-std::ostream &operator<<(std::ostream &os, SourceFile const &f);
 
 #endif //COMPILE_SCHEDULER_SOURCEFILE_H

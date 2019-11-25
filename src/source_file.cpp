@@ -79,3 +79,21 @@ vector<SourceFilePtr> SourceFile::getDependencies() {
 std::ostream &operator<<(std::ostream &os, SourceFile const &f) {
     return os << f.toString();
 }
+
+int SourceFile::getPoints(int compilationFinishedAt) {
+    int compilationTargetPoints = 0;
+    int compilationSpeedPoints = 0;
+
+    if(_compilationTarget == NULL){
+        return 0;
+    }
+
+    int finishedBeforeDeadline = _compilationTarget->deadline - compilationFinishedAt;
+
+    if (finishedBeforeDeadline >= 0){
+        compilationTargetPoints = _compilationTarget->goalPoints;
+        compilationSpeedPoints = finishedBeforeDeadline;
+    }
+
+    return compilationTargetPoints + compilationSpeedPoints;
+}
