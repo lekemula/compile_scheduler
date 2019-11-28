@@ -9,11 +9,13 @@
 #include <string>
 
 struct CompilationStep{
-    int compilationStartSecond;
+    int startAtSecond;
     ServerPtr server;
     SourceFilePtr sourceFile;
 
-    string toString();
+    int finishAtSecond();
+    int replicationAtSecond();
+    string toString() const;
 };
 
 std::ostream & operator<<(std::ostream & os, CompilationStep compilationStep);

@@ -12,15 +12,19 @@ std::ostream & operator<<(std::ostream & os, CompilationStep compilationStep){
     return os;
 }
 
-string CompilationStep::toString() {
-    int finishedAt = compilationStartSecond + sourceFile->getCompilationTime();
+int CompilationStep::finishAtSecond() { return sourceFile->getCompilationTime() + startAtSecond; }
+
+int CompilationStep::replicationAtSecond() { return finishAtSecond() + sourceFile->getReplicationTime(); }
+
+string CompilationStep::toString() const {
+    int finishedAt = startAtSecond + sourceFile->getCompilationTime();
     int replicatedAt = finishedAt + sourceFile->getReplicationTime();
     stringstream result;
 
     result << "<";
     result << "Server: " << server->getId() << ", ";
     result << "SourceFile: " << sourceFile->getId() << ", ";
-    result << "startedAt: " << compilationStartSecond << "seconds" << ", ";
+    result << "startedAt: " << startAtSecond << "seconds" << ", ";
     result << "finishedAt: " << finishedAt << ", ";
     result << "replicatedAt: " << replicatedAt;
     result << ">";

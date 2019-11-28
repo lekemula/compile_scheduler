@@ -10,12 +10,19 @@
 
 class Solution {
 private:
+    map<string, vector<int>> _sourceFileCompilations;
     vector<CompilationStep> _compilations;
+
 public:
     Solution();
 
     bool compile(SourceFilePtr & sourceFile, ServerPtr & server);
-    string toString();
+    bool complete(vector<SourceFilePtr> sourceFiles);
+    bool hasCompiled(SourceFilePtr & sourceFile);
+    int closestCompilationStart(SourceFilePtr & sourceFile, ServerPtr & server);
+    string toString() const;
+
+    friend std::ostream &operator<<(std::ostream &os, Solution const &s);
 };
 
 
