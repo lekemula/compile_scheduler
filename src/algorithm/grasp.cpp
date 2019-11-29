@@ -25,7 +25,7 @@ void Grasp::_constructGreedyRandomizedSolution(Grasp::Problem problem, Solution 
         step += 1;
         std::cout << "STEP " << step << std::endl;
 
-        vector<Grasp::CompilationCandidate> candidates;
+        vector<CompilationStep> candidates;
 
         for (auto & server : problem.servers) {
             for (auto & sourceFile : problem.sourceFiles) {
@@ -33,8 +33,10 @@ void Grasp::_constructGreedyRandomizedSolution(Grasp::Problem problem, Solution 
                     continue;
                 }
 
-                if(solution.closestCompilationStart(sourceFile, server) >= 0){
-                    candidates.push_back({ server, sourceFile });
+                int closestStartSecond = solution.closestCompilationStart(sourceFile, server);
+
+                if (closestStartSecond >= 0) {
+                    candidates.push_back({ closestStartSecond, server, sourceFile });
                 }
             }
         }
@@ -46,7 +48,7 @@ void Grasp::_constructGreedyRandomizedSolution(Grasp::Problem problem, Solution 
     }
 }
 
-void Grasp::_restrictCandidateList(vector<CompilationCandidate> & candidates, Solution & solution){
+void Grasp::_restrictCandidateList(vector<CompilationStep> & candidates, Solution & solution){
     std::sort(candidates.begin(), candidates.end(), [this, solution](auto & c1, auto & c2){
         return this->_incrementalCost(c1) < this->_incrementalCost(c2);
     });
@@ -54,12 +56,12 @@ void Grasp::_restrictCandidateList(vector<CompilationCandidate> & candidates, So
     int cardinality = candidates.size() * 10/100;
     cardinality = cardinality == 0 ? 1 : cardinality;
 
-    candidates = vector<CompilationCandidate>(candidates.begin(), candidates.begin() + cardinality);
+    candidates = vector<CompilationStep>(candidates.begin(), candidates.begin() + cardinality);
 }
 
-int Grasp::_incrementalCost(Grasp::CompilationCandidate & candidate) {
+int Grasp::_incrementalCost(CompilationStep & candidate) {
     int dependencies = candidate.sourceFile->getDependencies().size();
-    int compilationStartSecond = candidate.server->getCompilationTime();
+    int compilationStartSecond = candidate.startAtSecond;
 
     std::cout << "Cost s" << candidate.server->getId() << "<>" << candidate.sourceFile->getId()
         << " - dependencies: " << dependencies << " startTime: " << compilationStartSecond << std::endl;
@@ -67,7 +69,7 @@ int Grasp::_incrementalCost(Grasp::CompilationCandidate & candidate) {
     return (dependencies * 10000) + compilationStartSecond;
 }
 
-Grasp::CompilationCandidate Grasp::_pickNextRandom(vector<CompilationCandidate> & restrictedCandidateList) {
+CompilationStep Grasp::_pickNextRandom(vector<CompilationStep> & restrictedCandidateList) {
     auto start = restrictedCandidateList.begin();
     auto end = restrictedCandidateList.end();
     std::random_device rd;

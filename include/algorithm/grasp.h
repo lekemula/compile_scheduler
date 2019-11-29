@@ -15,19 +15,14 @@ class Grasp {
         vector<ServerPtr> servers;
     };
 
-    struct CompilationCandidate {
-        ServerPtr server;
-        SourceFilePtr sourceFile;
-    };
-
 private:
     Problem _problem;
     int _maxIterations;
 
     void _constructGreedyRandomizedSolution(Problem problem, Solution & solution);
-    void _restrictCandidateList(vector<CompilationCandidate> & candidates, Solution & solution);
-    CompilationCandidate _pickNextRandom(vector<CompilationCandidate> & restrictedCandidateList);
-    int _incrementalCost(CompilationCandidate & candidate);
+    void _restrictCandidateList(vector<CompilationStep> & candidates, Solution & solution);
+    CompilationStep _pickNextRandom(vector<CompilationStep> & restrictedCandidateList);
+    int _incrementalCost(CompilationStep & candidate);
 public:
     Grasp(Problem problem, int maxIterations);
     Solution perform();
