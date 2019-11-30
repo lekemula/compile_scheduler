@@ -49,13 +49,15 @@ void ComplexConstructor::_restrictCandidateList(vector<CompilationStep> & candid
 }
 
 int ComplexConstructor::_incrementalCost(CompilationStep & candidate) {
+    int isCompiled = _solution.hasCompiled(candidate.sourceFile) ? 1 : 0;
     int dependencies = candidate.sourceFile->getDependencies().size();
     int compilationStartSecond = candidate.startAtSecond;
+    int cost = (dependencies * 10000) + compilationStartSecond;
 
-    std::cout << "Cost s" << candidate.server->getId() << "<>" << candidate.sourceFile->getId()
-              << " - dependencies: " << dependencies << " startTime: " << compilationStartSecond << std::endl;
+//    std::cout << "Cost=" << cost << " " << candidate.server->getId() << "<>" << candidate.sourceFile->getId()
+//              << " - dependencies: " << dependencies << " startTime: " << compilationStartSecond << std::endl;
 
-    return (dependencies * 10000) + compilationStartSecond;
+    return cost;
 }
 
 CompilationStep ComplexConstructor::_pickNextRandom(vector<CompilationStep> & restrictedCandidateList) {

@@ -19,7 +19,9 @@ public:
     bool compile(CompilationStep & step);
     bool complete(vector<SourceFilePtr> sourceFiles);
     bool hasCompiled(SourceFilePtr & sourceFile);
+    unique_ptr<CompilationStep> earliestCompilation(SourceFilePtr & sourceFile);
     int closestCompilationStart(SourceFilePtr & sourceFile, ServerPtr & server);
+    int replicatedAt(SourceFilePtr & sourceFile);
     string toString() const;
 
     friend std::ostream &operator<<(std::ostream &os, Solution const &s);

@@ -60,20 +60,7 @@ int Solution::closestCompilationStart(SourceFilePtr & sourceFile, ServerPtr & on
         if(!hasCompiled(dependency)) return -1;
         if(onServer->hasCompiled(dependency)) continue;
 
-        vector<CompilationStep> compilationOnOtherServers;
-
-        for(int compilationStepIndex : _sourceFileCompilations[dependency->getId()]){
-            compilationOnOtherServers.push_back(_compilations[compilationStepIndex]);
-        }
-
-        CompilationStep earliestCompilation = *std::min_element(
-            compilationOnOtherServers.begin(),
-            compilationOnOtherServers.end(),
-            [](auto & compStep1, auto & compStep2) -> int {
-                return compStep1.startAtSecond < compStep2.startAtSecond;
-            });
-
-        int replicationAtSecond = earliestCompilation.replicationAtSecond();
+        int replicationAtSecond = replicatedAt(dependency);
         int waitReplicationTime = replicationAtSecond - closestCompilationStartAt;
 
         if(waitReplicationTime > 0){
@@ -82,4 +69,25 @@ int Solution::closestCompilationStart(SourceFilePtr & sourceFile, ServerPtr & on
     }
 
     return closestCompilationStartAt;
+}
+
+unique_ptr<CompilationStep> Solution::earliestCompilation(SourceFilePtr & sourceFile) {
+    auto findIterator = _sourceFileCompilations.find(sourceFile->getId());
+
+    if(findIterator != _sourceFileCompilations.end()){
+        vector<int> compilationIndexes = findIterator->second;
+        return make_unique<CompilationStep>(_compilations[compilationIndexes[0]]);
+    }
+
+    return NULL;
+}
+
+int Solution::replicatedAt(SourceFilePtr & sourceFile) {
+    auto fileEarliestCompilation = earliestCompilation(sourceFile);
+
+    if(fileEarliestCompilation){
+        return fileEarliestCompilation->replicationAtSecond();
+    }
+
+    return -1;
 }
