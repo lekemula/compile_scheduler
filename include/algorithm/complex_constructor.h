@@ -9,14 +9,11 @@
 #include "greedy_constructor.h"
 
 class ComplexConstructor : public GreedyConstructor {
-private:
-    Solution _solution;
-    void _restrictCandidateList(vector<CompilationStep> & candidates);
-    CompilationStep _pickNextRandom(vector<CompilationStep> & restrictedCandidateList);
-    int _incrementalCost(CompilationStep & candidate);
+protected:
+    virtual vector<CompilationStep> _buildCandidateList(Problem & problem) override;
+    virtual int _incrementalCost(CompilationStep & candidate) override;
 public:
     ComplexConstructor();
-    unique_ptr<Solution> construct(Problem & problem) override;
 };
 
 
