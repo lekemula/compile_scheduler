@@ -5,6 +5,7 @@
 #include "input_parser.h"
 #include <algorithm>
 #include <algorithm/grasp.h>
+#include <algorithm/complex_constructor.h>
 
 void printSourceFiles(vector<SourceFilePtr> & sourceFiles){
     for (auto & sourceFile : sourceFiles) {
@@ -24,17 +25,17 @@ int main(int argc, char * argv[]) {
     auto sourceFiles = inputParser.parse(inputMetadata);
     auto orderedSourceFiles = sourceFiles;
 
-    std::sort(orderedSourceFiles.begin(), orderedSourceFiles.end(), [](SourceFilePtr & sf1, SourceFilePtr & sf2) -> bool {
-        return (sf1->getDependencies().size() < sf2->getDependencies().size());
-    });
+//    std::sort(orderedSourceFiles.begin(), orderedSourceFiles.end(), [](SourceFilePtr & sf1, SourceFilePtr & sf2) -> bool {
+//        return (sf1->getDependencies().size() < sf2->getDependencies().size());
+//    });
 
     cout << "Total Files: " << inputMetadata.filesCount << endl;
     cout << "Target Files: " << inputMetadata.targetsCount << endl;
     cout << "Servers: " << inputMetadata.serversCount << endl;
 
     printSourceFiles(sourceFiles);
-    cout << endl;
-    printSourceFiles(orderedSourceFiles);
+//    cout << endl;
+//    printSourceFiles(orderedSourceFiles);
 
     vector<ServerPtr> servers;
 
@@ -42,9 +43,10 @@ int main(int argc, char * argv[]) {
         servers.push_back(ServerPtr(new Server(i)));
     }
 
-    Grasp grasp({ sourceFiles, servers }, 100);
+    ComplexConstructor greedyConstructor;
+    Grasp grasp({ sourceFiles, servers }, greedyConstructor, 100);
 
-    cout << grasp.perform();
+    cout << *grasp.perform();
 //    cout << solution.toString();
 
 //    Solution solution;

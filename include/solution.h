@@ -16,7 +16,7 @@ private:
 public:
     Solution();
 
-    bool compile(SourceFilePtr & sourceFile, ServerPtr & server);
+    bool compile(CompilationStep & step);
     bool complete(vector<SourceFilePtr> sourceFiles);
     bool hasCompiled(SourceFilePtr & sourceFile);
     int closestCompilationStart(SourceFilePtr & sourceFile, ServerPtr & server);
@@ -24,6 +24,8 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, Solution const &s);
 };
+
+
 
 
 #endif //COMPILE_SCHEDULER_SOLUTION_H

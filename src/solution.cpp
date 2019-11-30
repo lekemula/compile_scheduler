@@ -8,11 +8,12 @@
 
 Solution::Solution(){}
 
-bool Solution::compile(SourceFilePtr & sourceFile, ServerPtr & server) {
-    int compilationStartSecond = closestCompilationStart(sourceFile, server);
-    server->compile(sourceFile);
+bool Solution::compile(CompilationStep & step) {
+    auto server = step.server;
+    auto sourceFile = step.sourceFile;
 
-    _compilations.push_back({ compilationStartSecond, server, sourceFile });
+    server->compile(sourceFile);
+    _compilations.push_back(step);
     _sourceFileCompilations[sourceFile->getId()].push_back(_compilations.size() - 1);
 
     return true;

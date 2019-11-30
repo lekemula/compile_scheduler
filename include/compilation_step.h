@@ -18,6 +18,8 @@ struct CompilationStep{
     string toString() const;
 };
 
+typedef shared_ptr<CompilationStep> CompilationStepPtr;
+
 std::ostream & operator<<(std::ostream & os, CompilationStep compilationStep);
 
 #endif //COMPILE_SCHEDULER_COMPILATION_STEP_H

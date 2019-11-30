@@ -7,25 +7,21 @@
 
 #include <vector>
 #include <source_file.h>
-#include <solution.h>
+#include "solution.h"
+#include "problem.h"
+#include "greedy_constructor.h"
 
 class Grasp {
-    struct Problem {
-        vector<SourceFilePtr> sourceFiles;
-        vector<ServerPtr> servers;
-    };
 
 private:
     Problem _problem;
     int _maxIterations;
+    GreedyConstructor & _greedyConstructor;
 
-    void _constructGreedyRandomizedSolution(Problem problem, Solution & solution);
-    void _restrictCandidateList(vector<CompilationStep> & candidates, Solution & solution);
-    CompilationStep _pickNextRandom(vector<CompilationStep> & restrictedCandidateList);
-    int _incrementalCost(CompilationStep & candidate);
+    unique_ptr<Solution> _constructGreedyRandomizedSolution();
 public:
-    Grasp(Problem problem, int maxIterations);
-    Solution perform();
+    Grasp(Problem problem, GreedyConstructor & greedyConstructor, int maxIterations);
+    unique_ptr<Solution> perform();
 };
 
 
