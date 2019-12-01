@@ -67,7 +67,7 @@ const SourceFile &SourceFile::addDependency(SourceFilePtr sourceFile) {
 vector<SourceFilePtr> SourceFile::getDependencies() {
     vector<SourceFilePtr> returnValue;
 
-    map<string, SourceFilePtr>::iterator it;
+    unordered_map<string, SourceFilePtr>::iterator it;
 
     for (it = _dependencies.begin(); it != _dependencies.end(); ++it) {
         returnValue.push_back(it->second);

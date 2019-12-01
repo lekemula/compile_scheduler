@@ -6,21 +6,7 @@
 #include <random>
 #include "algorithm/complex_constructor.h"
 
-int ComplexConstructor::_incrementalCost(CompilationStep & candidate) {
-    int isCompiled = _solution.hasCompiled(candidate.sourceFile) ? 1 : 0;
-    int dependencies = candidate.sourceFile->getDependencies().size();
-    int compilationStartSecond = candidate.startAtSecond;
-    int cost = (dependencies * 10000) + compilationStartSecond;
-
-//    std::cout << "Cost=" << cost << " " << candidate.server->getId() << "<>" << candidate.sourceFile->getId()
-//              << " - dependencies: " << dependencies << " startTime: " << compilationStartSecond << std::endl;
-
-    return cost;
-}
-
-vector<CompilationStep> ComplexConstructor::_buildCandidateList(Problem & problem) {
-    vector<CompilationStep> candidates;
-
+void ComplexConstructor::_buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) {
     for (auto & server : problem.servers) {
         for (auto & sourceFile : problem.sourceFiles) {
             if(_solution.hasCompiled(sourceFile)){
@@ -34,8 +20,17 @@ vector<CompilationStep> ComplexConstructor::_buildCandidateList(Problem & proble
             }
         }
     }
+}
 
-    return candidates;
+int ComplexConstructor::_incrementalCost(CompilationStep & candidate) {
+    int dependencies = candidate.sourceFile->getDependencies().size();
+    int compilationStartSecond = candidate.startAtSecond;
+    int cost = (dependencies * 10000) + compilationStartSecond;
+
+//    std::cout << "Cost=" << cost << " " << candidate.server->getId() << "<>" << candidate.sourceFile->getId()
+//              << " - dependencies: " << dependencies << " startTime: " << compilationStartSecond << std::endl;
+
+    return cost;
 }
 
 ComplexConstructor::ComplexConstructor() {}

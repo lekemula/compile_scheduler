@@ -13,7 +13,7 @@ class Server{
 private:
     int _id;
     int _compilationTime;
-    map<string, vector<int>> _sourceFileCompilations;
+    unordered_map<string, vector<int>> _sourceFileCompilations;
     vector<SourceFilePtr> _compiledFiles;
 
 public:

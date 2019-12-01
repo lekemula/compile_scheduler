@@ -27,7 +27,7 @@ private:
     ifstream _file;
     InputMetadata _metadata;
     vector<SourceFilePtr> _parsedSourceFiles;
-    map<string, SourceFilePtr> _parsedSourceFilesMap;
+    unordered_map<string, SourceFilePtr> _parsedSourceFilesMap;
 
     void _open();
     void _close();

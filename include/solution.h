@@ -5,12 +5,13 @@
 #ifndef COMPILE_SCHEDULER_SOLUTION_H
 #define COMPILE_SCHEDULER_SOLUTION_H
 
+#include <unordered_map>
 #include "server.h"
 #include "compilation_step.h"
 
 class Solution {
 private:
-    map<string, vector<int>> _sourceFileCompilations;
+    unordered_map<string, vector<int>> _sourceFileCompilations;
     vector<CompilationStep> _compilations;
 
 public:

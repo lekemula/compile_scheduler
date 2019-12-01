@@ -13,7 +13,7 @@ class GreedyConstructor {
 protected:
     Solution _solution;
 
-    virtual vector<CompilationStep> _buildCandidateList(Problem & problem) = 0;
+    virtual void _buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) = 0;
     virtual void _restrictCandidateList(vector<CompilationStep> & candidates);
     CompilationStep _pickNextRandom(vector<CompilationStep> & restrictedCandidateList);
     virtual int _incrementalCost(CompilationStep & candidate) = 0;

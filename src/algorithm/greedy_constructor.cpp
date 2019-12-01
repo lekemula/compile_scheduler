@@ -5,25 +5,48 @@
 #include <random>
 #include <iostream>
 #include "algorithm/greedy_constructor.h"
+#include "helpers.h"
 
 unique_ptr<Solution> GreedyConstructor::construct(Problem & problem) {
     int step = -1;
-    while (!_solution.complete(problem.sourceFiles)) {
+
+    bool solutionComplete = false;
+    while (!solutionComplete) {
         step += 1;
         std::cout << "STEP " << step << std::endl;
 
-        vector<CompilationStep> candidates = _buildCandidateList(problem);
-        _restrictCandidateList(candidates);
+        vector<CompilationStep> candidates;
+        _buildCandidateList(problem, candidates); // TODO: Potential performance problem!
+        _restrictCandidateList(candidates); // TODO: Potential performance problem!
+
         auto next = _pickNextRandom(candidates);
         _solution.compile(next);
+
+//        int candidatesCount = candidates.size();
+//        cout << "Candidates count:" << candidates.size() << endl;
+//        int time = measureBlockExecution("solutionComplete", [this, solutionComplete, problem]() mutable {
+//
+//        });
+//        cout << "Execution time per candidate = " << time / (double) candidatesCount << endl;
+        solutionComplete = _solution.complete(problem.sourceFiles);
     }
 
     return std::make_unique<Solution>(_solution);
 }
 
 void GreedyConstructor::_restrictCandidateList(vector<CompilationStep> & candidates){
-    std::sort(candidates.begin(), candidates.end(), [this](auto & c1, auto & c2){
-        return this->_incrementalCost(c1) < this->_incrementalCost(c2);
+    unordered_map<long int, int> candidatesCosts;
+
+    for(auto & candidate : candidates){
+        auto candidateAddress = (long int)&candidate;
+        candidatesCosts[candidateAddress] = this->_incrementalCost(candidate);
+    }
+
+    std::sort(candidates.begin(), candidates.end(), [this, candidatesCosts](auto & c1, auto & c2){
+        auto c1Address = (long int)&c1;
+        auto c2Address = (long int)&c2;
+
+        return  candidatesCosts.find(c1Address)->second < candidatesCosts.find(c2Address)->second;
     });
 
     int cardinality = candidates.size() * 10/100;

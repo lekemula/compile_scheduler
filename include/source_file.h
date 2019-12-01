@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <ostream>
+#include <unordered_map>
 #include "compilation_target.h"
 
 using namespace std;
@@ -19,7 +20,7 @@ private:
     int _compilationTime;
     int _replicationTime;
     unique_ptr<CompilationTarget> _compilationTarget;
-    map<string, SourceFilePtr> _dependencies = {};
+    unordered_map<string, SourceFilePtr> _dependencies = {};
 
 public:
     SourceFile(string id, int compilationTime, int replicationTime);

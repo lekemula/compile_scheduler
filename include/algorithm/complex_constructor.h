@@ -10,7 +10,7 @@
 
 class ComplexConstructor : public GreedyConstructor {
 protected:
-    virtual vector<CompilationStep> _buildCandidateList(Problem & problem) override;
+    virtual void _buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) override;
     virtual int _incrementalCost(CompilationStep & candidate) override;
 public:
     ComplexConstructor();
