@@ -35,18 +35,18 @@ unique_ptr<Solution> GreedyConstructor::construct(Problem & problem) {
 }
 
 void GreedyConstructor::_restrictCandidateList(vector<CompilationStep> & candidates){
-    unordered_map<long int, int> candidatesCosts;
+    unordered_map<string, int> candidatesCosts;
 
     for(auto & candidate : candidates){
-        auto candidateAddress = (long int)&candidate;
-        candidatesCosts[candidateAddress] = this->_incrementalCost(candidate);
+        string key = candidate.server->getId() + "_" + candidate.sourceFile->getId();
+        candidatesCosts[key] = this->_incrementalCost(candidate);
     }
 
     std::sort(candidates.begin(), candidates.end(), [this, candidatesCosts](auto & c1, auto & c2){
-        auto c1Address = (long int)&c1;
-        auto c2Address = (long int)&c2;
+        string key1 = c1.server->getId() + "_" + c1.sourceFile->getId();
+        string key2 = c2.server->getId() + "_" + c2.sourceFile->getId();
 
-        return  candidatesCosts.find(c1Address)->second < candidatesCosts.find(c2Address)->second;
+        return  candidatesCosts.find(key1)->second < candidatesCosts.find(key2)->second;
     });
 
     int cardinality = candidates.size() * 10/100;

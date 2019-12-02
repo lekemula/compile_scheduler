@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <algorithm/grasp.h>
 #include <algorithm/complex_constructor.h>
+#include <algorithm/least_busy_server_constructor.h>
 
 void printSourceFiles(vector<SourceFilePtr> & sourceFiles){
     for (auto & sourceFile : sourceFiles) {
@@ -43,7 +44,7 @@ int main(int argc, char * argv[]) {
         servers.push_back(ServerPtr(new Server(i)));
     }
 
-    ComplexConstructor greedyConstructor;
+    LeastBusyServerConstructor greedyConstructor;
     Grasp grasp({ sourceFiles, servers }, greedyConstructor, 100);
 
     cout << *grasp.perform();
