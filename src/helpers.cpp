@@ -12,7 +12,7 @@ int measureBlockExecution(std::string title, std::function<void()> executionBloc
     executionBlock();
     auto t2 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-    std::cout << title << " duration = " << duration << std::endl;
+//    std::cout << title << " duration = " << duration << std::endl;
 
     return duration;
 }

@@ -12,6 +12,10 @@ bool Solution::compile(CompilationStep & step) {
     auto server = step.server;
     auto sourceFile = step.sourceFile;
 
+    if(step.startAtSecond == -1){
+        step.startAtSecond = closestCompilationStart(sourceFile, server);
+    }
+
     server->compile(sourceFile);
     _compilations.push_back(step);
     _sourceFileCompilations[sourceFile->getId()].push_back(_compilations.size() - 1);
@@ -90,4 +94,14 @@ int Solution::replicatedAt(SourceFilePtr & sourceFile) {
     }
 
     return -1;
+}
+
+int Solution::score() {
+    int score = 0;
+
+    for(auto & compilationStep : _compilations){
+        score += compilationStep.score();
+    }
+
+    return score;
 }

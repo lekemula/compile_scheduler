@@ -23,6 +23,7 @@ public:
     unique_ptr<CompilationStep> earliestCompilation(SourceFilePtr & sourceFile);
     int closestCompilationStart(SourceFilePtr & sourceFile, ServerPtr & server);
     int replicatedAt(SourceFilePtr & sourceFile);
+    int score();
     string toString() const;
 
     friend std::ostream &operator<<(std::ostream &os, Solution const &s);

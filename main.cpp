@@ -7,6 +7,7 @@
 #include <algorithm/grasp.h>
 #include <algorithm/complex_constructor.h>
 #include <algorithm/least_busy_server_constructor.h>
+#include "helpers.h"
 
 void printSourceFiles(vector<SourceFilePtr> & sourceFiles){
     for (auto & sourceFile : sourceFiles) {
@@ -47,7 +48,15 @@ int main(int argc, char * argv[]) {
     LeastBusyServerConstructor greedyConstructor;
     Grasp grasp({ sourceFiles, servers }, greedyConstructor, 100);
 
-    cout << *grasp.perform();
+    unique_ptr<Solution> solution;
+
+    measureBlockExecution("Grasp Construction Performance", [& solution, grasp]() mutable{
+        solution = grasp.perform();
+    });
+
+//    cout << *solution;
+    cout << "TOTAL SCORE = " << solution->score();
+
 //    cout << solution.toString();
 
 //    Solution solution;

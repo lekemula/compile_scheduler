@@ -31,3 +31,7 @@ string CompilationStep::toString() const {
 
     return result.str();
 }
+
+int CompilationStep::score() {
+    return sourceFile->getPoints(finishAtSecond());
+}

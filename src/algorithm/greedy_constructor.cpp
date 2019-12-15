@@ -16,8 +16,14 @@ unique_ptr<Solution> GreedyConstructor::construct(Problem & problem) {
         std::cout << "STEP " << step << std::endl;
 
         vector<CompilationStep> candidates;
-        _buildCandidateList(problem, candidates); // TODO: Potential performance problem!
-        _restrictCandidateList(candidates); // TODO: Potential performance problem!
+
+        measureBlockExecution("_buildCandidateList", [this, problem, & candidates]() mutable {
+            _buildCandidateList(problem, candidates); // TODO: Potential performance problem!
+        });
+
+        measureBlockExecution("_restrictCandidateList", [this, problem, & candidates]() mutable {
+            _restrictCandidateList(candidates); // TODO: Potential performance problem!
+        });
 
         auto next = _pickNextRandom(candidates);
         _solution.compile(next);
@@ -42,7 +48,7 @@ void GreedyConstructor::_restrictCandidateList(vector<CompilationStep> & candida
         candidatesCosts[key] = this->_incrementalCost(candidate);
     }
 
-    std::sort(candidates.begin(), candidates.end(), [this, candidatesCosts](auto & c1, auto & c2){
+    std::sort(candidates.begin(), candidates.end(), [this, & candidatesCosts](auto & c1, auto & c2){
         string key1 = c1.server->getId() + "_" + c1.sourceFile->getId();
         string key2 = c2.server->getId() + "_" + c2.sourceFile->getId();
 

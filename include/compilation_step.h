@@ -13,6 +13,7 @@ struct CompilationStep{
     ServerPtr server;
     SourceFilePtr sourceFile;
 
+    int score();
     int finishAtSecond();
     int replicationAtSecond();
     string toString() const;
