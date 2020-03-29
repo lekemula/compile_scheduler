@@ -8,6 +8,14 @@
 
 #include "greedy_constructor.h"
 
+/*
+ *  - For each server sorted by compilation time
+ *      - For non compiled files in server
+ *          - calculate closest compilation start (check dependencies and replication)
+ *          - add candidate if can be compiled
+ *
+ *  - cost = (Dependencies * 10000) +  compilationStartSecond
+ * */
 class ComplexConstructor : public GreedyConstructor {
 protected:
     virtual void _buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) override;
