@@ -16,4 +16,18 @@ add_executable(
         src/compilation_step.cpp
         include/compilation_step.h
         src/server.cpp
-        src/solution.cpp include/solution.h src/algorithm/grasp.cpp include/algorithm/grasp.h include/algorithm/problem.h src/algorithm/greedy_constructor.cpp include/algorithm/greedy_constructor.h src/algorithm/complex_constructor.cpp include/algorithm/complex_constructor.h src/helpers.cpp include/helpers.h src/algorithm/least_busy_server_constructor.cpp include/algorithm/least_busy_server_constructor.h)
+        src/solution.cpp
+        include/solution.h
+        src/algorithm/grasp.cpp
+        include/algorithm/grasp.h
+        include/algorithm/problem.h
+        src/algorithm/greedy_constructor.cpp
+        include/algorithm/greedy_constructor.h
+        src/algorithm/complex_constructor.cpp
+        include/algorithm/complex_constructor.h
+        src/helpers.cpp include/helpers.h
+        src/algorithm/closest_compilation_start_constructor.cpp
+        include/algorithm/closest_compilation_start_constructor.h
+        include/algorithm/least_busy_server_constructor.h
+        src/algorithm/least_busy_server_constructor.cpp
+)

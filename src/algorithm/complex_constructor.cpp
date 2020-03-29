@@ -7,19 +7,21 @@
 #include "algorithm/complex_constructor.h"
 
 void ComplexConstructor::_buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) {
-    ServerPtr leastBusyServer = *std::min_element(problem.servers.begin(), problem.servers.end(), [](ServerPtr & s1, ServerPtr & s2) -> bool {
+    std::sort(problem.servers.begin(), problem.servers.end(), [](ServerPtr & s1, ServerPtr & s2) -> bool {
         return s1->getCompilationTime() < s2->getCompilationTime();
     });
 
-    for (auto & sourceFile : problem.sourceFiles) {
-        if(_solution.hasCompiled(sourceFile)){
-            continue;
-        }
+    for(auto & server : problem.servers) {
+        for (auto & sourceFile : problem.sourceFiles) {
+            if(_solution.hasCompiled(sourceFile)){
+                continue;
+            }
 
-        int closestStartSecond = _solution.closestCompilationStart(sourceFile, leastBusyServer);
+            int closestStartSecond = _solution.closestCompilationStart(sourceFile, server);
 
-        if (closestStartSecond >= 0) {
-            candidates.push_back({ closestStartSecond, leastBusyServer, sourceFile });
+            if (closestStartSecond >= 0) {
+                candidates.push_back({ closestStartSecond, server, sourceFile });
+            }
         }
     }
 }

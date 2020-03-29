@@ -13,7 +13,8 @@ unique_ptr<Solution> GreedyConstructor::construct(Problem & problem) {
     bool solutionComplete = false;
     while (!solutionComplete) {
         step += 1;
-        std::cout << "STEP " << step << std::endl;
+        std::cout << "STEP " << step << "\r";
+        std::cout.flush();
 
         vector<CompilationStep> candidates;
 

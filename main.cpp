@@ -7,6 +7,7 @@
 #include <algorithm/grasp.h>
 #include <algorithm/complex_constructor.h>
 #include <algorithm/least_busy_server_constructor.h>
+#include <algorithm/closest_compilation_start_constructor.h>
 #include "helpers.h"
 
 void printSourceFiles(vector<SourceFilePtr> & sourceFiles){
@@ -35,9 +36,11 @@ int main(int argc, char * argv[]) {
     cout << "Target Files: " << inputMetadata.targetsCount << endl;
     cout << "Servers: " << inputMetadata.serversCount << endl;
 
-    printSourceFiles(sourceFiles);
+//    printSourceFiles(sourceFiles);
 //    cout << endl;
-//    printSourceFiles(orderedSourceFiles);
+    printSourceFiles(orderedSourceFiles);
+    auto targetDependants = orderedSourceFiles[1]->getTargetDependantsWithDistance();
+    cout << "c0 target dependants count: " << targetDependants.size() << endl;
 
     vector<ServerPtr> servers;
 
@@ -50,12 +53,13 @@ int main(int argc, char * argv[]) {
 
     unique_ptr<Solution> solution;
 
-    measureBlockExecution("Grasp Construction Performance", [& solution, grasp]() mutable{
+    int execTime = measureBlockExecution("Grasp Construction Performance", [& solution, grasp]() mutable{
         solution = grasp.perform();
     });
 
 //    cout << *solution;
-    cout << "TOTAL SCORE = " << solution->score();
+    cout << "TOTAL SCORE = " << solution->score() << endl;
+    cout << "Execution time: " << execTime;
 
 //    cout << solution.toString();
 

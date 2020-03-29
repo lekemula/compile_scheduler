@@ -12,9 +12,7 @@
 #include <random>
 #include <helpers.h>
 
-#include "algorithm/least_busy_server_constructor.h"
-
-void LeastBusyServerConstructor::_buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) {
+void ClosestCompilationStartConstructor::_buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) {
     ServerPtr leastBusyServer;
 
     measureBlockExecution("_buildCandidateList__leastBusyServer", [&leastBusyServer, problem]() mutable {
@@ -34,15 +32,24 @@ void LeastBusyServerConstructor::_buildCandidateList(Problem & problem, vector<C
             continue;
         }
 
-        candidates.push_back({ -1, leastBusyServer, sourceFile });
+        int closestStartSecond = 0;
+
+        measureBlockExecution("_buildCandidateList__closestStartSecond", [&closestStartSecond, this, sourceFile, leastBusyServer]() mutable {
+            closestStartSecond = _solution.closestCompilationStart(sourceFile, leastBusyServer);
+        });
+
+        if (closestStartSecond >= 0) {
+            candidates.push_back({ closestStartSecond, leastBusyServer, sourceFile });
+        }
     }
 }
 
-int LeastBusyServerConstructor::_incrementalCost(CompilationStep & candidate) {
+int ClosestCompilationStartConstructor::_incrementalCost(CompilationStep & candidate) {
     int dependencies = candidate.sourceFile->getDependencies().size();
-    int cost = dependencies;
+    int compilationStartSecond = candidate.startAtSecond;
+    int cost = (dependencies * 10000) + compilationStartSecond;
 
     return cost;
 }
 
-LeastBusyServerConstructor::LeastBusyServerConstructor() {}
+ClosestCompilationStartConstructor::ClosestCompilationStartConstructor() {}

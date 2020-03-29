@@ -59,8 +59,9 @@ const SourceFile &SourceFile::setCompilationTarget(unique_ptr<CompilationTarget>
     return *this;
 }
 
-const SourceFile &SourceFile::addDependency(SourceFilePtr sourceFile) {
+const SourceFile & SourceFile::addDependency(SourceFilePtr sourceFile) {
     _dependencies[sourceFile->getId()] = sourceFile;
+    sourceFile->_dependants[this->getId()] = shared_from_this();
     return *this;
 }
 
@@ -96,4 +97,30 @@ int SourceFile::getPoints(int compilationFinishedAt) {
     }
 
     return compilationTargetPoints + compilationSpeedPoints;
+}
+
+int SourceFile::dependenciesCount() {
+    return this->_dependencies.size();
+}
+
+int SourceFile::dependantsCount() {
+    return this->_dependants.size();
+}
+
+vector<SourceFile::TargetDistance> SourceFile::getTargetDependantsWithDistance(int distance) {
+    vector<SourceFile::TargetDistance> result;
+
+    for (auto & iterator : _dependants) {
+        auto & dependant = iterator.second;
+
+        if(dependant->isTargetFile()){
+            SourceFile::TargetDistance targetDistance = { distance, dependant };
+            result.push_back(targetDistance);
+        }
+
+        auto dependantTargetFiles = dependant->getTargetDependantsWithDistance(distance + 1);
+        result.insert(result.end(), dependantTargetFiles.begin(), dependantTargetFiles.end());
+    }
+
+    return result;
 }

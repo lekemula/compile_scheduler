@@ -13,14 +13,21 @@
 
 using namespace std;
 
-class SourceFile {
+class SourceFile : public std::enable_shared_from_this<SourceFile> {
     typedef shared_ptr<SourceFile> SourceFilePtr;
+
+    struct TargetDistance {
+        int distance;
+        SourceFilePtr targetSourceFile;
+    };
+
 private:
     string _id;
     int _compilationTime;
     int _replicationTime;
     unique_ptr<CompilationTarget> _compilationTarget;
     unordered_map<string, SourceFilePtr> _dependencies = {};
+    unordered_map<string, SourceFilePtr> _dependants = {}; // Files that depend on this file
 
 public:
     SourceFile(string id, int compilationTime, int replicationTime);
@@ -35,6 +42,9 @@ public:
     bool                            isTargetFile() { return _compilationTarget != NULL; }
     int                             getPoints(int compiledAt);
     vector<SourceFilePtr>           getDependencies();
+    int                             dependenciesCount();
+    int                             dependantsCount();
+    vector<TargetDistance>          getTargetDependantsWithDistance(int distance = 0);
 
     string toString() const;
 
