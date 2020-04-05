@@ -30,4 +30,4 @@ add_executable(
         include/algorithm/closest_compilation_start_constructor.h
         include/algorithm/least_busy_server_constructor.h
         src/algorithm/least_busy_server_constructor.cpp
-)
+        src/algorithm/most_target_dependants_constructor.cpp include/algorithm/most_target_dependants_constructor.h)

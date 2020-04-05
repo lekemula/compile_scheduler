@@ -8,6 +8,7 @@
 #include <algorithm/complex_constructor.h>
 #include <algorithm/least_busy_server_constructor.h>
 #include <algorithm/closest_compilation_start_constructor.h>
+#include <algorithm/most_target_dependants_constructor.h>
 #include "helpers.h"
 
 void printSourceFiles(vector<SourceFilePtr> & sourceFiles){
@@ -18,65 +19,71 @@ void printSourceFiles(vector<SourceFilePtr> & sourceFiles){
     cout << endl;
 }
 
-int main(int argc, char * argv[]) {
-    const char * inputFilePath = argv[1];
-
-    InputParser inputParser(inputFilePath);
-    InputMetadata inputMetadata;
-    ServerPtr server(new Server(1));
-
-    auto sourceFiles = inputParser.parse(inputMetadata);
-    auto orderedSourceFiles = sourceFiles;
-
-//    std::sort(orderedSourceFiles.begin(), orderedSourceFiles.end(), [](SourceFilePtr & sf1, SourceFilePtr & sf2) -> bool {
-//        return (sf1->getDependencies().size() < sf2->getDependencies().size());
-//    });
-
+void printInputInfos(InputMetadata & inputMetadata){
     cout << "Total Files: " << inputMetadata.filesCount << endl;
     cout << "Target Files: " << inputMetadata.targetsCount << endl;
     cout << "Servers: " << inputMetadata.serversCount << endl;
+}
 
-//    printSourceFiles(sourceFiles);
-//    cout << endl;
-    printSourceFiles(orderedSourceFiles);
-    auto targetDependants = orderedSourceFiles[1]->getTargetDependantsWithDistance();
-    cout << "c0 target dependants count: " << targetDependants.size() << endl;
+void printResults(Solution & solution){
+    cout << solution;
+    cout << "TOTAL SCORE = " << solution.score() << endl;
+}
 
+Problem parseSourceFilesFromFile(string filePath, InputMetadata & outMetadata){
+    InputParser inputParser(filePath);
     vector<ServerPtr> servers;
+    auto sourceFiles = inputParser.parse(outMetadata);
 
-    for (int i = 0; i < inputMetadata.serversCount; ++i) {
+    for (int i = 0; i < outMetadata.serversCount; ++i) {
         servers.push_back(ServerPtr(new Server(i)));
     }
 
-    LeastBusyServerConstructor greedyConstructor;
-    Grasp grasp({ sourceFiles, servers }, greedyConstructor, 100);
+    return Problem({ sourceFiles, servers });
+}
 
-    unique_ptr<Solution> solution;
+int main(int argc, char * argv[]) {
+    const char * inputFilePath = argv[1];
 
-    int execTime = measureBlockExecution("Grasp Construction Performance", [& solution, grasp]() mutable{
-        solution = grasp.perform();
-    });
+    InputMetadata inputMetadata;
+    auto problem = parseSourceFilesFromFile(inputFilePath, inputMetadata);
 
-//    cout << *solution;
-    cout << "TOTAL SCORE = " << solution->score() << endl;
-    cout << "Execution time: " << execTime;
+    printInputInfos(inputMetadata);
+    printSourceFiles(problem.sourceFiles);
 
-//    cout << solution.toString();
+    const int greedyConstructorsCount = 4;
 
-//    Solution solution;
-//    solution.compile(sourceFiles[0], servers[0]);
-//    cout << solution.closestCompilationStart(sourceFiles[2], servers[1]);
+    string greedyConstructorNames[greedyConstructorsCount] {
+        "MostTargetDependantsConstructor",
+        "ClosestCompilationStartConstructor",
+        "LeastBusyServerConstructor",
+        "ComplexConstructor",
+    };
 
-//    cout << sourceFiles[4]->getPoints(45) << endl;
-//    cout << server->getCompilationTime();
+    shared_ptr<GreedyConstructor> greedyConstructors[greedyConstructorsCount] = {
+        shared_ptr<GreedyConstructor>(new MostTargetDependantsConstructor()),
+        shared_ptr<GreedyConstructor>(new ClosestCompilationStartConstructor()),
+        shared_ptr<GreedyConstructor>(new LeastBusyServerConstructor()),
+        shared_ptr<GreedyConstructor>(new ComplexConstructor())
+    };
 
-//    {
-//          t0, s0, c0 // 15
-//          t0, s1, c1 // 18
-//          t15, s0, c2 // 30
-//          t10, s1, c3 // 23
-//
-//    }
+    for (int i = 0; i < greedyConstructorsCount; ++i) {
+        string greedyConstructorName = greedyConstructorNames[i];
+        auto greedyConstructor = greedyConstructors[i];
+        auto problem = parseSourceFilesFromFile(inputFilePath, inputMetadata);
+
+        cout << "Running with " + greedyConstructorName + " constructor" << endl;
+
+        Grasp grasp(problem, *greedyConstructor, 100);
+        unique_ptr<Solution> solution;
+
+        int execTime = measureBlockExecution("Grasp Construction Performance", [& solution, grasp]() mutable{
+            solution = grasp.perform();
+        });
+
+        printResults(*solution);
+        cout << "Execution time: " << execTime << endl;
+    }
 
     return 0;
 }
