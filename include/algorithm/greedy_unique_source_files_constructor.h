@@ -17,7 +17,7 @@ class GreedyUniqueSourceFilesConstructor : public GreedyConstructor {
         virtual int _incrementalCost(CompilationStep & candidate);
     public:
         virtual unique_ptr<Solution> construct(Problem & problem);
-        GreedyUniqueSourceFilesConstructor();
+        GreedyUniqueSourceFilesConstructor(shared_ptr<CostFunction> costFunction) : GreedyConstructor(costFunction) { };
 };
 
 

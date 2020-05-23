@@ -73,3 +73,11 @@ CompilationStep GreedyConstructor::_pickNextRandom(vector<CompilationStep> & res
 
     return *start;
 }
+
+GreedyConstructor::GreedyConstructor(shared_ptr<CostFunction> costFunction) {
+    this->_costFunction = costFunction;
+}
+
+int GreedyConstructor::_incrementalCost(CompilationStep & candidate) {
+    return (*_costFunction)(candidate.sourceFile);
+}

@@ -45,11 +45,10 @@ void ClosestCompilationStartConstructor::_buildCandidateList(Problem & problem, 
 }
 
 int ClosestCompilationStartConstructor::_incrementalCost(CompilationStep & candidate) {
-    int dependencies = candidate.sourceFile->getDependencies().size();
+    int dependencies = (*_costFunction)(candidate.sourceFile);
     int compilationStartSecond = candidate.startAtSecond;
     int cost = (dependencies * 10000) + compilationStartSecond;
 
     return cost;
 }
 
-ClosestCompilationStartConstructor::ClosestCompilationStartConstructor() {}

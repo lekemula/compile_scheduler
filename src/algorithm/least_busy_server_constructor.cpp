@@ -44,5 +44,3 @@ int LeastBusyServerConstructor::_incrementalCost(CompilationStep & candidate) {
 
     return cost;
 }
-
-LeastBusyServerConstructor::LeastBusyServerConstructor() {}

@@ -14,7 +14,8 @@ void GreedyUniqueSourceFilesConstructor::_buildCandidateList(Problem & problem, 
         });
     });
 
-    int max = min(this->_notCompiledOrderedSourceFiles.size(), (unsigned long)100);
+    int max = min(this->_notCompiledOrderedSourceFiles.size(), (unsigned long)5000);
+//    int max = this->_notCompiledOrderedSourceFiles.size();
 
     for (int i = 0; i < max; ++i) {
         auto sourceFile = this->_notCompiledOrderedSourceFiles[i];
@@ -33,6 +34,7 @@ void GreedyUniqueSourceFilesConstructor::_buildCandidateList(Problem & problem, 
 }
 
 int GreedyUniqueSourceFilesConstructor::_incrementalCost(CompilationStep & candidate) {
+    // cost is pre-calculated during the sorting of _notCompiledOrderedSourceFiles
     return 0;
 }
 
@@ -52,11 +54,9 @@ CompilationStep GreedyUniqueSourceFilesConstructor::_pickNextRandom(vector<Compi
 unique_ptr<Solution> GreedyUniqueSourceFilesConstructor::construct(Problem & problem) {
     this->_notCompiledOrderedSourceFiles = problem.sourceFiles;
 
-    std::sort (this->_notCompiledOrderedSourceFiles.begin(),  this->_notCompiledOrderedSourceFiles.end(), [] (SourceFilePtr file1, SourceFilePtr file2) -> bool {
-        file1->getTargetDependantsWithDistance().size() > file2->getTargetDependantsWithDistance().size();
+    std::sort(this->_notCompiledOrderedSourceFiles.begin(),  this->_notCompiledOrderedSourceFiles.end(), [this] (SourceFilePtr file1, SourceFilePtr file2) -> bool {
+        return (*_costFunction)(file1) < (*_costFunction)(file2);
     });
 
     return GreedyConstructor::construct(problem);
 }
-
-GreedyUniqueSourceFilesConstructor::GreedyUniqueSourceFilesConstructor() {}

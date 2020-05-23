@@ -19,7 +19,7 @@ protected:
     virtual void _buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) override;
     virtual int _incrementalCost(CompilationStep & candidate) override;
 public:
-    ClosestCompilationStartConstructor();
+    ClosestCompilationStartConstructor(shared_ptr<CostFunction> costFunction) : GreedyConstructor(costFunction) { };
 };
 
 

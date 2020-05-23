@@ -27,7 +27,7 @@ void ComplexConstructor::_buildCandidateList(Problem & problem, vector<Compilati
 }
 
 int ComplexConstructor::_incrementalCost(CompilationStep & candidate) {
-    int dependencies = candidate.sourceFile->getDependencies().size();
+    int dependencies = (*_costFunction)(candidate.sourceFile);
     int compilationStartSecond = candidate.startAtSecond;
     int cost = (dependencies * 10000) + compilationStartSecond;
 
@@ -36,5 +36,3 @@ int ComplexConstructor::_incrementalCost(CompilationStep & candidate) {
 
     return cost;
 }
-
-ComplexConstructor::ComplexConstructor() {}

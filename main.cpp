@@ -8,7 +8,8 @@
 #include <algorithm/complex_constructor.h>
 #include <algorithm/least_busy_server_constructor.h>
 #include <algorithm/closest_compilation_start_constructor.h>
-#include <algorithm/most_target_dependants_constructor.h>
+#include <algorithm/cost_functions/least_target_dependants_cost.h>
+#include <algorithm/cost_functions/most_dependencies_cost.h>
 #include "algorithm/greedy_unique_source_files_constructor.h"
 #include "helpers.h"
 
@@ -63,11 +64,11 @@ int main(int argc, char * argv[]) {
     };
 
     shared_ptr<GreedyConstructor> greedyConstructors[greedyConstructorsCount] = {
-        shared_ptr<GreedyConstructor>(new MostTargetDependantsConstructor()),
-        shared_ptr<GreedyConstructor>(new ClosestCompilationStartConstructor()),
-        shared_ptr<GreedyConstructor>(new LeastBusyServerConstructor()),
-        shared_ptr<GreedyConstructor>(new GreedyUniqueSourceFilesConstructor()),
-        shared_ptr<GreedyConstructor>(new ComplexConstructor())
+        shared_ptr<GreedyConstructor>(new LeastBusyServerConstructor(make_shared<LeastTargetDependantsCost>())),
+        shared_ptr<GreedyConstructor>(new ClosestCompilationStartConstructor(make_shared<MostDependenciesCost>())),
+        shared_ptr<GreedyConstructor>(new LeastBusyServerConstructor(make_shared<MostDependenciesCost>())),
+        shared_ptr<GreedyConstructor>(new GreedyUniqueSourceFilesConstructor(make_shared<LeastTargetDependantsCost>())),
+        shared_ptr<GreedyConstructor>(new ComplexConstructor(make_shared<MostDependenciesCost>()))
     };
 
     for (int i = 3; i < greedyConstructorsCount - 1; ++i) {
