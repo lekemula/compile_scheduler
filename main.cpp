@@ -9,6 +9,7 @@
 #include <algorithm/least_busy_server_constructor.h>
 #include <algorithm/closest_compilation_start_constructor.h>
 #include <algorithm/most_target_dependants_constructor.h>
+#include "algorithm/greedy_unique_source_files_constructor.h"
 #include "helpers.h"
 
 void printSourceFiles(vector<SourceFilePtr> & sourceFiles){
@@ -26,7 +27,7 @@ void printInputInfos(InputMetadata & inputMetadata){
 }
 
 void printResults(Solution & solution){
-    cout << solution;
+//    cout << solution;
     cout << "TOTAL SCORE = " << solution.score() << endl;
 }
 
@@ -49,14 +50,15 @@ int main(int argc, char * argv[]) {
     auto problem = parseSourceFilesFromFile(inputFilePath, inputMetadata);
 
     printInputInfos(inputMetadata);
-    printSourceFiles(problem.sourceFiles);
+//    printSourceFiles(problem.sourceFiles);
 
-    const int greedyConstructorsCount = 4;
+    const int greedyConstructorsCount = 5;
 
     string greedyConstructorNames[greedyConstructorsCount] {
         "MostTargetDependantsConstructor",
         "ClosestCompilationStartConstructor",
         "LeastBusyServerConstructor",
+        "GreedyUniqueSourceFilesConstructor",
         "ComplexConstructor",
     };
 
@@ -64,10 +66,11 @@ int main(int argc, char * argv[]) {
         shared_ptr<GreedyConstructor>(new MostTargetDependantsConstructor()),
         shared_ptr<GreedyConstructor>(new ClosestCompilationStartConstructor()),
         shared_ptr<GreedyConstructor>(new LeastBusyServerConstructor()),
+        shared_ptr<GreedyConstructor>(new GreedyUniqueSourceFilesConstructor()),
         shared_ptr<GreedyConstructor>(new ComplexConstructor())
     };
 
-    for (int i = 0; i < greedyConstructorsCount; ++i) {
+    for (int i = 3; i < greedyConstructorsCount - 1; ++i) {
         string greedyConstructorName = greedyConstructorNames[i];
         auto greedyConstructor = greedyConstructors[i];
         auto problem = parseSourceFilesFromFile(inputFilePath, inputMetadata);

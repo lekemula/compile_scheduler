@@ -15,10 +15,10 @@ protected:
 
     virtual void _buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) = 0;
     virtual void _restrictCandidateList(vector<CompilationStep> & candidates);
-    CompilationStep _pickNextRandom(vector<CompilationStep> & restrictedCandidateList);
+    virtual CompilationStep _pickNextRandom(vector<CompilationStep> & restrictedCandidateList);
     virtual int _incrementalCost(CompilationStep & candidate) = 0;
 public:
-    unique_ptr<Solution> construct(Problem & problem);
+    virtual unique_ptr<Solution> construct(Problem & problem);
 };
 
 #endif //COMPILE_SCHEDULER_GREEDY_CONSTRUCTOR_H
