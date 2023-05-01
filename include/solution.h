@@ -19,12 +19,12 @@ class Solution {
   Solution();
 
   bool compile(CompilationStep &step);
-  bool complete(vector<SourceFilePtr> sourceFiles);
-  bool hasCompiled(SourceFilePtr &sourceFile);
-  unique_ptr<CompilationStep> earliestCompilation(SourceFilePtr &sourceFile);
-  int closestCompilationStart(SourceFilePtr &sourceFile, ServerPtr &server);
-  int replicatedAt(SourceFilePtr &sourceFile);
-  int score();
+  bool complete(vector<SourceFilePtr> sourceFiles) const;
+  bool hasCompiled(SourceFilePtr &sourceFile) const;
+  unique_ptr<CompilationStep> earliestCompilation(SourceFilePtr &sourceFile) const;
+  int closestCompilationStart(SourceFilePtr &sourceFile, ServerPtr &server) const;
+  int replicatedAt(SourceFilePtr &sourceFile) const;
+  int score() const;
   string toString() const;
 
   friend std::ostream &operator<<(std::ostream &os, Solution const &s);

@@ -20,11 +20,11 @@ class Server {
  public:
   Server(int id);
   Server(int id, vector<SourceFilePtr> compiledFiles);
-  bool hasCompiled(SourceFilePtr const& sourceFile);
-  bool canCompile(SourceFilePtr& sourceFile);
+  bool hasCompiled(SourceFilePtr const& sourceFile) const;
+  bool canCompile(SourceFilePtr& sourceFile) const;
   void compile(SourceFilePtr const& sourceFile);
-  int getCompilationTime();
-  int getId();
+  int getCompilationTime() const;
+  int getId() const;
 };
 
 typedef shared_ptr<Server> ServerPtr;

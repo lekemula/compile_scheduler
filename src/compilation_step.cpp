@@ -13,9 +13,9 @@ std::ostream& operator<<(std::ostream& os, CompilationStep compilationStep) {
   return os;
 }
 
-int CompilationStep::finishAtSecond() { return sourceFile->getCompilationTime() + startAtSecond; }
+int CompilationStep::finishAtSecond() const { return sourceFile->getCompilationTime() + startAtSecond; }
 
-int CompilationStep::replicationAtSecond() { return finishAtSecond() + sourceFile->getReplicationTime(); }
+int CompilationStep::replicationAtSecond() const { return finishAtSecond() + sourceFile->getReplicationTime(); }
 
 string CompilationStep::toString() const {
   int finishedAt   = startAtSecond + sourceFile->getCompilationTime();
@@ -34,4 +34,4 @@ string CompilationStep::toString() const {
   return result.str();
 }
 
-int CompilationStep::score() { return sourceFile->getPoints(finishAtSecond()); }
+int CompilationStep::score() const { return sourceFile->getPoints(finishAtSecond()); }

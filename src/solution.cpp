@@ -34,7 +34,7 @@ string Solution::toString() const {
   return result.str();
 }
 
-bool Solution::hasCompiled(SourceFilePtr& sourceFile) {
+bool Solution::hasCompiled(SourceFilePtr& sourceFile) const {
   auto it = _sourceFileCompilations.find(sourceFile->getId());
 
   if (it == _sourceFileCompilations.end()) {
@@ -44,7 +44,7 @@ bool Solution::hasCompiled(SourceFilePtr& sourceFile) {
   return true;
 }
 
-bool Solution::complete(vector<SourceFilePtr> sourceFiles) {
+bool Solution::complete(vector<SourceFilePtr> sourceFiles) const {
   for (auto& sourceFile : sourceFiles) {
     if (!hasCompiled(sourceFile)) {
       return false;
@@ -56,7 +56,7 @@ bool Solution::complete(vector<SourceFilePtr> sourceFiles) {
 
 std::ostream& operator<<(std::ostream& os, Solution const& s) { return os << s.toString(); }
 
-int Solution::closestCompilationStart(SourceFilePtr& sourceFile, ServerPtr& onServer) {
+int Solution::closestCompilationStart(SourceFilePtr& sourceFile, ServerPtr& onServer) const {
   int closestCompilationStartAt = onServer->getCompilationTime();
 
   for (auto& dependency : sourceFile->getDependencies()) {
@@ -74,7 +74,7 @@ int Solution::closestCompilationStart(SourceFilePtr& sourceFile, ServerPtr& onSe
   return closestCompilationStartAt;
 }
 
-unique_ptr<CompilationStep> Solution::earliestCompilation(SourceFilePtr& sourceFile) {
+unique_ptr<CompilationStep> Solution::earliestCompilation(SourceFilePtr& sourceFile) const {
   auto findIterator = _sourceFileCompilations.find(sourceFile->getId());
 
   if (findIterator != _sourceFileCompilations.end()) {
@@ -85,7 +85,7 @@ unique_ptr<CompilationStep> Solution::earliestCompilation(SourceFilePtr& sourceF
   return NULL;
 }
 
-int Solution::replicatedAt(SourceFilePtr& sourceFile) {
+int Solution::replicatedAt(SourceFilePtr& sourceFile) const {
   auto fileEarliestCompilation = earliestCompilation(sourceFile);
 
   if (fileEarliestCompilation) {
@@ -95,7 +95,7 @@ int Solution::replicatedAt(SourceFilePtr& sourceFile) {
   return -1;
 }
 
-int Solution::score() {
+int Solution::score() const {
   int score = 0;
 
   for (auto& compilationStep : _compilations) {

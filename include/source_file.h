@@ -41,16 +41,16 @@ class SourceFile : public std::enable_shared_from_this<SourceFile> {
   const SourceFile &setCompilationTarget(unique_ptr<CompilationTarget> compilationTarget);
   const SourceFile &addDependency(SourceFilePtr sourceFile);
   bool isTargetFile() { return _compilationTarget != NULL; }
-  int getPoints(int compiledAt);
-  vector<SourceFilePtr> getDependencies();
-  int dependenciesCount();
-  int dependantsCount();
-  vector<TargetDistance> getTargetDependantsWithDistance(int distance = 0);
+  int getPoints(int compiledAt) const;
+  vector<SourceFilePtr> getDependencies() const;
+  int dependenciesCount() const;
+  int dependantsCount() const;
+  vector<TargetDistance> getTargetDependantsWithDistance(int distance = 0) const;
 
   string toString() const;
 
-  bool operator==(SourceFile const &otherFile);
-  bool operator!=(SourceFile const &otherFile);
+  bool operator==(SourceFile const &otherFile) const;
+  bool operator!=(SourceFile const &otherFile) const;
 
   friend std::ostream &operator<<(std::ostream &os, SourceFile const &f);
 };

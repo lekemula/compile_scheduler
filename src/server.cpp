@@ -16,11 +16,11 @@ void Server::compile(SourceFilePtr const& sourceFile) {
   this->_sourceFileCompilations[sourceFile->getId()].push_back(_compiledFiles.size() - 1);
 }
 
-bool Server::hasCompiled(SourceFilePtr const& sourceFile) {
+bool Server::hasCompiled(SourceFilePtr const& sourceFile) const {
   return _sourceFileCompilations.find(sourceFile->getId()) != _sourceFileCompilations.end();
 }
 
-bool Server::canCompile(SourceFilePtr& sourceFile) {
+bool Server::canCompile(SourceFilePtr& sourceFile) const {
   for (auto& fileDependency : sourceFile->getDependencies()) {
     if (!hasCompiled(fileDependency)) {
       return false;
@@ -30,6 +30,6 @@ bool Server::canCompile(SourceFilePtr& sourceFile) {
   return true;
 }
 
-int Server::getCompilationTime() { return _compilationTime; }
+int Server::getCompilationTime() const { return _compilationTime; }
 
-int Server::getId() { return _id; }
+int Server::getId() const { return _id; }

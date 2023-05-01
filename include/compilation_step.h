@@ -14,9 +14,9 @@ struct CompilationStep {
   ServerPtr server;
   SourceFilePtr sourceFile;
 
-  int score();
-  int finishAtSecond();
-  int replicationAtSecond();
+  int score() const;
+  int finishAtSecond() const;
+  int replicationAtSecond() const;
   string toString() const;
 };
 

@@ -38,9 +38,9 @@ string SourceFile::toString() const {
   return output;
 }
 
-bool SourceFile::operator==(SourceFile const &otherFile) { return getId() == otherFile.getId(); }
+bool SourceFile::operator==(SourceFile const &otherFile) const { return getId() == otherFile.getId(); }
 
-bool SourceFile::operator!=(SourceFile const &otherFile) { return getId() != otherFile.getId(); }
+bool SourceFile::operator!=(SourceFile const &otherFile) const { return getId() != otherFile.getId(); }
 
 const CompilationTarget &SourceFile::getCompilationTarget() const { return *_compilationTarget; }
 
@@ -58,10 +58,10 @@ const SourceFile &SourceFile::addDependency(SourceFilePtr sourceFile) {
   return *this;
 }
 
-vector<SourceFilePtr> SourceFile::getDependencies() {
+vector<SourceFilePtr> SourceFile::getDependencies() const {
   vector<SourceFilePtr> returnValue;
 
-  unordered_map<string, SourceFilePtr>::iterator it;
+  unordered_map<string, SourceFilePtr>::const_iterator it;
 
   for (it = _dependencies.begin(); it != _dependencies.end(); ++it) {
     returnValue.push_back(it->second);
@@ -72,7 +72,7 @@ vector<SourceFilePtr> SourceFile::getDependencies() {
 
 std::ostream &operator<<(std::ostream &os, SourceFile const &f) { return os << f.toString(); }
 
-int SourceFile::getPoints(int compilationFinishedAt) {
+int SourceFile::getPoints(int compilationFinishedAt) const {
   int compilationTargetPoints = 0;
   int compilationSpeedPoints  = 0;
 
@@ -90,11 +90,11 @@ int SourceFile::getPoints(int compilationFinishedAt) {
   return compilationTargetPoints + compilationSpeedPoints;
 }
 
-int SourceFile::dependenciesCount() { return this->_dependencies.size(); }
+int SourceFile::dependenciesCount() const { return this->_dependencies.size(); }
 
-int SourceFile::dependantsCount() { return this->_dependants.size(); }
+int SourceFile::dependantsCount() const { return this->_dependants.size(); }
 
-vector<SourceFile::TargetDistance> SourceFile::getTargetDependantsWithDistance(int distance) {
+vector<SourceFile::TargetDistance> SourceFile::getTargetDependantsWithDistance(int distance) const {
   vector<SourceFile::TargetDistance> result;
 
   for (auto &iterator : _dependants) {
