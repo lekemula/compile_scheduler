@@ -16,11 +16,12 @@ Dataset: [Source](https://codejam.googleapis.com/dashboard/get_file/AQj_6U2mIz2z
 
 ## Build
 
-  * Run this first time and whenever changing `CMakeLists.txt`: `cmake -B cmake-build-debug`
-  * Build code: `cmake --build cmake-build-debug`
+  * Run this first time and whenever changing `CMakeLists.txt`: `cmake -B build`
+    * VIM: `:CMake`
+  * Build code: `cmake --build build`
 
 ## Run
-  `./cmake-build-debug/compile_scheduler data/a_example.in`
+  `./build/compile_scheduler data/a_example.in`
 
 All possible input datas are listed in `/data` folder:
 
