@@ -1,15 +1,16 @@
 //
 // Created by Leke Mula on 19.11.19.
 //
-#include <iostream>
-#include <sstream>
 #include "compilation_step.h"
 
-// <Server: s1, SourceFile: c1, startedAt: 10seconds, finishedAt: 20seconds, replicatedAt: 30seconds>
-std::ostream & operator<<(std::ostream & os, CompilationStep compilationStep){
-    std::cout << compilationStep.toString();
+#include <iostream>
+#include <sstream>
 
-    return os;
+// <Server: s1, SourceFile: c1, startedAt: 10seconds, finishedAt: 20seconds, replicatedAt: 30seconds>
+std::ostream& operator<<(std::ostream& os, CompilationStep compilationStep) {
+  std::cout << compilationStep.toString();
+
+  return os;
 }
 
 int CompilationStep::finishAtSecond() { return sourceFile->getCompilationTime() + startAtSecond; }
@@ -17,21 +18,20 @@ int CompilationStep::finishAtSecond() { return sourceFile->getCompilationTime() 
 int CompilationStep::replicationAtSecond() { return finishAtSecond() + sourceFile->getReplicationTime(); }
 
 string CompilationStep::toString() const {
-    int finishedAt = startAtSecond + sourceFile->getCompilationTime();
-    int replicatedAt = finishedAt + sourceFile->getReplicationTime();
-    stringstream result;
+  int finishedAt   = startAtSecond + sourceFile->getCompilationTime();
+  int replicatedAt = finishedAt + sourceFile->getReplicationTime();
+  stringstream result;
 
-    result << "<";
-    result << "Server: " << server->getId() << ", ";
-    result << "SourceFile: " << sourceFile->getId() << ", ";
-    result << "startedAt: " << startAtSecond << "seconds" << ", ";
-    result << "finishedAt: " << finishedAt << ", ";
-    result << "replicatedAt: " << replicatedAt;
-    result << ">";
+  result << "<";
+  result << "Server: " << server->getId() << ", ";
+  result << "SourceFile: " << sourceFile->getId() << ", ";
+  result << "startedAt: " << startAtSecond << "seconds"
+         << ", ";
+  result << "finishedAt: " << finishedAt << ", ";
+  result << "replicatedAt: " << replicatedAt;
+  result << ">";
 
-    return result.str();
+  return result.str();
 }
 
-int CompilationStep::score() {
-    return sourceFile->getPoints(finishAtSecond());
-}
+int CompilationStep::score() { return sourceFile->getPoints(finishAtSecond()); }

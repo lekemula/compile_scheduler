@@ -15,12 +15,12 @@
  *  - cost = (Dependencies * 10000) +  compilationStartSecond
  * */
 class ClosestCompilationStartConstructor : public GreedyConstructor {
-protected:
-    virtual void _buildCandidateList(Problem & problem, vector<CompilationStep> & candidates) override;
-    virtual int _incrementalCost(CompilationStep & candidate) override;
-public:
-    ClosestCompilationStartConstructor(shared_ptr<CostFunction> costFunction) : GreedyConstructor(costFunction) { };
+ protected:
+  virtual void _buildCandidateList(Problem& problem, vector<CompilationStep>& candidates) override;
+  virtual int _incrementalCost(CompilationStep& candidate) override;
+
+ public:
+  ClosestCompilationStartConstructor(shared_ptr<CostFunction> costFunction) : GreedyConstructor(costFunction){};
 };
 
-
-#endif //COMPILE_SCHEDULER_CLOSEST_COMPILATION_START_CONSTRUCTOR_H
+#endif  // COMPILE_SCHEDULER_CLOSEST_COMPILATION_START_CONSTRUCTOR_H

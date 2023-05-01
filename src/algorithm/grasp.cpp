@@ -3,18 +3,14 @@
 //
 
 #include "algorithm/grasp.h"
+
 #include <algorithm>
-#include <random>
 #include <iostream>
+#include <random>
 
-Grasp::Grasp(Problem problem, GreedyConstructor & greedyConstructor, int maxIterations)
-    : _problem(problem), _greedyConstructor(greedyConstructor), _maxIterations(maxIterations) {
-}
+Grasp::Grasp(Problem problem, GreedyConstructor& greedyConstructor, int maxIterations)
+    : _problem(problem), _greedyConstructor(greedyConstructor), _maxIterations(maxIterations) {}
 
-unique_ptr<Solution> Grasp::perform() {
-    return _constructGreedyRandomizedSolution();
-}
+unique_ptr<Solution> Grasp::perform() { return _constructGreedyRandomizedSolution(); }
 
-unique_ptr<Solution> Grasp::_constructGreedyRandomizedSolution() {
-    return _greedyConstructor.construct(_problem);
-}
+unique_ptr<Solution> Grasp::_constructGreedyRandomizedSolution() { return _greedyConstructor.construct(_problem); }

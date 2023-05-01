@@ -8,9 +8,8 @@
 #include <compilation_step.h>
 
 class CostFunction {
-public:
-    virtual int operator () (SourceFilePtr & sourceFile) = 0;
+ public:
+  virtual int operator()(SourceFilePtr& sourceFile) = 0;
 };
 
-
-#endif //COMPILE_SCHEDULER_COST_FUNCTION_H
+#endif  // COMPILE_SCHEDULER_COST_FUNCTION_H

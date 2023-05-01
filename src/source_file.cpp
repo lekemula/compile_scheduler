@@ -2,125 +2,112 @@
 // Created by leke on 9/7/19.
 //
 
-#include <vector>
 #include "source_file.h"
 
-SourceFile::SourceFile(string id, int compilationTime, int replicationTime) :
-        _id(id),
-        _compilationTime(compilationTime),
-        _replicationTime(replicationTime) {}
+#include <vector>
 
-SourceFile::SourceFile(string id, int compilationTime, int replicationTime, unique_ptr<CompilationTarget>& compilationTarget) :
-        SourceFile::SourceFile(id, compilationTime, replicationTime) {
-        _compilationTarget = move(compilationTarget);
+SourceFile::SourceFile(string id, int compilationTime, int replicationTime)
+    : _id(id), _compilationTime(compilationTime), _replicationTime(replicationTime) {}
+
+SourceFile::SourceFile(string id, int compilationTime, int replicationTime,
+                       unique_ptr<CompilationTarget> &compilationTarget)
+    : SourceFile::SourceFile(id, compilationTime, replicationTime) {
+  _compilationTarget = move(compilationTarget);
 }
 
 string SourceFile::toString() const {
-    string output = "<Source File ID: " + getId() +
-                    ", Compilation Time: " + to_string(getCompilationTime()) +
-                    ", Replication Time: " + to_string(getReplicationTime());
+  string output = "<Source File ID: " + getId() + ", Compilation Time: " + to_string(getCompilationTime()) +
+                  ", Replication Time: " + to_string(getReplicationTime());
 
-    if (_compilationTarget != NULL) {
-        output += ", Target Deadline: " + to_string(_compilationTarget->deadline);
-        output += ", Points:" + to_string(_compilationTarget->goalPoints);
+  if (_compilationTarget != NULL) {
+    output += ", Target Deadline: " + to_string(_compilationTarget->deadline);
+    output += ", Points:" + to_string(_compilationTarget->goalPoints);
+  }
+
+  if (_dependencies.size() > 0) {
+    string fileIds = "";
+    for (auto &dependencyPair : _dependencies) {
+      SourceFilePtr dependency = dependencyPair.second;
+      fileIds += " " + dependency->getId();
     }
 
-    if (_dependencies.size() > 0) {
-        string fileIds = "";
-        for (auto & dependencyPair : _dependencies) {
-            SourceFilePtr dependency = dependencyPair.second;
-            fileIds += " " + dependency->getId();
-        }
+    output += ", Dependency IDs {" + fileIds + " }";
+  }
 
-        output += ", Dependency IDs {" + fileIds + " }";
-    }
-
-    output += ">";
-    return output;
+  output += ">";
+  return output;
 }
 
-bool SourceFile::operator==(SourceFile const &otherFile) {
-    return getId() == otherFile.getId();
-}
+bool SourceFile::operator==(SourceFile const &otherFile) { return getId() == otherFile.getId(); }
 
-bool SourceFile::operator!=(SourceFile const &otherFile) {
-    return getId() != otherFile.getId();
-}
+bool SourceFile::operator!=(SourceFile const &otherFile) { return getId() != otherFile.getId(); }
 
-const CompilationTarget& SourceFile::getCompilationTarget() const {
-    return *_compilationTarget;
-}
+const CompilationTarget &SourceFile::getCompilationTarget() const { return *_compilationTarget; }
 
 const SourceFile &SourceFile::setCompilationTarget(unique_ptr<CompilationTarget> compilationTarget) {
-    if (!_compilationTarget) {
-        _compilationTarget = move(compilationTarget);
-    }
+  if (!_compilationTarget) {
+    _compilationTarget = move(compilationTarget);
+  }
 
-    return *this;
+  return *this;
 }
 
-const SourceFile & SourceFile::addDependency(SourceFilePtr sourceFile) {
-    _dependencies[sourceFile->getId()] = sourceFile;
-    sourceFile->_dependants[this->getId()] = shared_from_this();
-    return *this;
+const SourceFile &SourceFile::addDependency(SourceFilePtr sourceFile) {
+  _dependencies[sourceFile->getId()]     = sourceFile;
+  sourceFile->_dependants[this->getId()] = shared_from_this();
+  return *this;
 }
 
 vector<SourceFilePtr> SourceFile::getDependencies() {
-    vector<SourceFilePtr> returnValue;
+  vector<SourceFilePtr> returnValue;
 
-    unordered_map<string, SourceFilePtr>::iterator it;
+  unordered_map<string, SourceFilePtr>::iterator it;
 
-    for (it = _dependencies.begin(); it != _dependencies.end(); ++it) {
-        returnValue.push_back(it->second);
-    }
+  for (it = _dependencies.begin(); it != _dependencies.end(); ++it) {
+    returnValue.push_back(it->second);
+  }
 
-    return returnValue;
+  return returnValue;
 }
 
-std::ostream &operator<<(std::ostream &os, SourceFile const &f) {
-    return os << f.toString();
-}
+std::ostream &operator<<(std::ostream &os, SourceFile const &f) { return os << f.toString(); }
 
 int SourceFile::getPoints(int compilationFinishedAt) {
-    int compilationTargetPoints = 0;
-    int compilationSpeedPoints = 0;
+  int compilationTargetPoints = 0;
+  int compilationSpeedPoints  = 0;
 
-    if(_compilationTarget == NULL){
-        return 0;
-    }
+  if (_compilationTarget == NULL) {
+    return 0;
+  }
 
-    int finishedBeforeDeadline = _compilationTarget->deadline - compilationFinishedAt;
+  int finishedBeforeDeadline = _compilationTarget->deadline - compilationFinishedAt;
 
-    if (finishedBeforeDeadline >= 0){
-        compilationTargetPoints = _compilationTarget->goalPoints;
-        compilationSpeedPoints = finishedBeforeDeadline;
-    }
+  if (finishedBeforeDeadline >= 0) {
+    compilationTargetPoints = _compilationTarget->goalPoints;
+    compilationSpeedPoints  = finishedBeforeDeadline;
+  }
 
-    return compilationTargetPoints + compilationSpeedPoints;
+  return compilationTargetPoints + compilationSpeedPoints;
 }
 
-int SourceFile::dependenciesCount() {
-    return this->_dependencies.size();
-}
+int SourceFile::dependenciesCount() { return this->_dependencies.size(); }
 
-int SourceFile::dependantsCount() {
-    return this->_dependants.size();
-}
+int SourceFile::dependantsCount() { return this->_dependants.size(); }
 
 vector<SourceFile::TargetDistance> SourceFile::getTargetDependantsWithDistance(int distance) {
-    vector<SourceFile::TargetDistance> result;
+  vector<SourceFile::TargetDistance> result;
 
-    for (auto & iterator : _dependants) {
-        auto & dependant = iterator.second;
+  for (auto &iterator : _dependants) {
+    auto &dependant = iterator.second;
 
-        if(dependant->isTargetFile()){
-            SourceFile::TargetDistance targetDistance = { distance, dependant };
-            result.push_back(targetDistance);
-        }
-
-        auto dependantTargetFiles = dependant->getTargetDependantsWithDistance(distance + 1);
-        result.insert(result.end(), dependantTargetFiles.begin(), dependantTargetFiles.end());
+    if (dependant->isTargetFile()) {
+      SourceFile::TargetDistance targetDistance = {distance, dependant};
+      result.push_back(targetDistance);
     }
 
-    return result;
+    auto dependantTargetFiles = dependant->getTargetDependantsWithDistance(distance + 1);
+    result.insert(result.end(), dependantTargetFiles.begin(), dependantTargetFiles.end());
+  }
+
+  return result;
 }

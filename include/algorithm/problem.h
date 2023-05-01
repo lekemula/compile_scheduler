@@ -8,8 +8,8 @@
 #include <server.h>
 
 struct Problem {
-    vector<SourceFilePtr> sourceFiles;
-    vector<ServerPtr> servers;
+  vector<SourceFilePtr> sourceFiles;
+  vector<ServerPtr> servers;
 };
 
-#endif //COMPILE_SCHEDULER_PROBLEM_H
+#endif  // COMPILE_SCHEDULER_PROBLEM_H

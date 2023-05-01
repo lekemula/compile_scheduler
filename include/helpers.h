@@ -9,4 +9,4 @@
 
 int measureBlockExecution(std::string title, std::function<void()> executionBlock);
 
-#endif //COMPILE_SCHEDULER_HELPERS_H
+#endif  // COMPILE_SCHEDULER_HELPERS_H
